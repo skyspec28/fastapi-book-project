@@ -1,4 +1,4 @@
-\name: CD - Deploy to AWS
+name: CD - Deploy to AWS
 on:
   push:
     branches:
@@ -12,13 +12,13 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
         with:
-            host: ${{ secrets.AWS_HOST }}
-            username: ubuntu
-            key: ${{ secrets.AWS_PRIVATE_KEY }}
-            script: |
-                cd fastapi-app
-                git stash
-                git pull origin main
-                source venv/bin/activate
-                pip install -r requirements.txt
-                sudo systemctl restart fastapi
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
+          script: |
+            cd fastapi-app
+            git reset --hard HEAD
+            git pull origin main --force
+            source venv/bin/activate
+            pip install -r requirements.txt
+            sudo systemctl restart fastapi
