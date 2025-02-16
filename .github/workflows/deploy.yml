@@ -16,7 +16,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            cd fastapi-app
+            cd fastapi-app-book-project
             git reset --hard HEAD
             git pull origin main --force
             source venv/bin/activate
