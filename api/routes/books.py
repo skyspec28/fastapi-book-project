@@ -75,3 +75,6 @@ async def delete_book(book_id: int) -> None:
     db.delete_book(book_id)
     return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content=None)
 
+@router.get("/stage2", status_code=status.HTTP_200_OK)
+async def stage2_endpoint():
+    return {"message": "Stage 2 endpoint is live!"}
