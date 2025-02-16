@@ -9,36 +9,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Deploy to EC2 via SSH (Key Authentication)
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
-        continue-on-error: true  # Allow fallback if this fails
         with:
-          host: ${{ secrets.AWS_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            set -e  # Exit if any command fails
-            cd /home/cd/Testing-project
-            git reset --hard HEAD
-            git pull origin main --force
-            source myenv/bin/activate
-            pip install -r requirements.txt
-            sudo systemctl restart fastapi || echo "Failed to restart fastapi"
-            sudo systemctl restart nginx || echo "Failed to restart nginx"
-
-      - name: Install sshpass (For Password Authentication)
-        if: failure()  
-        run: sudo apt-get install -y sshpass
-
-      - name: Deploy to EC2 via SSH (Password Authentication)
-        if: failure() 
-        run: |
-          cd /home/cd/Testing-project
-          git reset --hard HEAD
-          git pull origin main --force
-          source venv/bin/activate
-          pip install -r requirements.txt
-          sudo systemctl restart fastapi || echo 'Failed to restart fastapi'
-          sudo systemctl restart nginx || echo 'Failed to restart nginx'
-          "
+            host: ${{ secrets.AWS_HOST }}
+            username: ubuntu
+            key: ${{ secrets.AWS_PRIVATE_KEY }}
+            script: |
+                cd fastapi-app-project
+                git stash
+                git pull origin main
+                source venv/bin/activate
+                pip install -r requirements.txt
+                sudo systemctl restart fastapi
